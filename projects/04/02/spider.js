@@ -1,35 +1,9 @@
-# 2. 콜백 모범 사례와 제어 흐름 패턴
+import fs from 'fs'
+import mkdirp from 'mkdirp'
+import path from 'path'
+import superagent from 'superagent'
+import { urlToFilename } from './utils.js'
 
-## 2.1 콜백 규칙
-
-- 명심할 첫 번째 규칙: 콜백을 정의할 때 in-place 함수 정의를 남용하지 않는다.
-- 가능한 빨리 종료한다. return, continue, break 사용하기.
-- 콜백을 위한 이름 있는 함수를 만들어 클로저 바깥에 배치하고 중간 결과를 인자로 전달한다.
-- 코드를 모듈화한다. 가능한 한 작고 재사용 가능한 함수로 분할한다.
-
-## 2.2 콜백 규칙 적용
-
-- 첫 번째 단계로 else 문을 제거한다. 빠른 반환 원칙.
-
-```js
-// before
-if (err) {
-    cb(err)
-} else {
-    // 에러가 없을 때 실행할 코드
-}
-
-// after
-if (err) {
-    return cb(err)
-}
-// 에러가 없을 때 실행할 코드
-```
-
-- spider() 함수의 두 번쨰 최적화로 재사용 가능한 코드를 구분하기가 있다.
-
-```js
-// after
 export function spider(url, cb) {
     const filename = urlToFilename(url)
     fs.access(filename, err => {
@@ -69,7 +43,3 @@ function saveFile(filename, contents, cb) {
         fs.writeFile(filename, contents, cb)
     })
 }
-```
-
------
-[HOME](./index.md)
